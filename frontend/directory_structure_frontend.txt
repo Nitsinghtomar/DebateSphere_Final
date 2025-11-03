@@ -1,0 +1,32 @@
+.
+├── directory_structure_frontend.txt
+├── package.json
+├── package-lock.json
+├── public
+│   └── index.html
+└── src
+    ├── App.css
+    ├── App_Fixed.tsx
+    ├── App_New.tsx
+    ├── App_Old.tsx
+    ├── App.tsx
+    ├── ChatAppComponent.tsx
+    ├── Chat.tsx
+    ├── components
+    │   ├── Auth
+    │   │   ├── Login.tsx
+    │   │   └── Register.tsx
+    │   ├── Dashboard
+    │   │   └── Dashboard.tsx
+    │   ├── Debate
+    │   │   └── DebateArena.tsx
+    │   ├── DebateArenaComplete.tsx
+    │   ├── Home.tsx
+    │   ├── SimpleHome.tsx
+    │   └── Week4CompleteApp.tsx
+    ├── Dashboard.tsx
+    ├── index.css
+    ├── index.tsx
+    └── SimpleApp.tsx
+
+6 directories, 23 files

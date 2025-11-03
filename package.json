@@ -1,0 +1,107 @@
+{
+  "name": "debatesphere",
+  "version": "1.0.0",
+  "description": "The AI-Powered Critical Thinking Incubator - A MERN stack application for practicing argumentation skills",
+  "main": "index.js",
+  "scripts": {
+    "install-all": "npm install && cd frontend && npm install && cd ../backend && npm install && cd ..",
+    "start": "concurrently \"npm run start:backend\" \"npm run start:frontend\"",
+    "start:frontend": "cd frontend && npm start",
+    "start:backend": "cd backend && npm start",
+    "dev": "concurrently \"npm run dev:backend\" \"npm run dev:frontend\"",
+    "dev:frontend": "cd frontend && npm start",
+    "dev:backend": "cd backend && npm run dev",
+    "dev:ai": "cd ai-service && python app.py",
+    "build": "cd frontend && npm run build",
+    "test": "concurrently \"npm run test:frontend\" \"npm run test:backend\"",
+    "test:frontend": "cd frontend && npm test",
+    "test:backend": "cd backend && npm test",
+    "lint": "concurrently \"npm run lint:frontend\" \"npm run lint:backend\"",
+    "format": "prettier --write \"**/*.{js,jsx,ts,tsx,json,css,md}\"",
+    "clean": "rimraf node_modules frontend/node_modules backend/node_modules frontend/build",
+    "setup": "npm run install-all",
+    "db:seed": "cd backend && node scripts/seed-database.js",
+    "db:reset": "cd backend && node scripts/reset-database.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Nitsinghtomar/DebateSphere.git"
+  },
+  "keywords": [
+    "debate",
+    "ai", 
+    "education",
+    "mern",
+    "react",
+    "nodejs",
+    "mongodb",
+    "socket.io",
+    "critical-thinking",
+    "argumentation"
+  ],
+  "author": {
+    "name": "DebateSphere Team",
+    "email": "22b0919@iitb.ac.in",
+    "url": "https://github.com/Nitsinghtomar/DebateSphere"
+  },
+  "contributors": [
+    {
+      "name": "Nitesh Singh",
+      "email": "22b0919@iitb.ac.in",
+      "role": "Project Manager & UI/UX Lead"
+    },
+    {
+      "name": "Kanishk Sharma", 
+      "email": "22b1049@iitb.ac.in",
+      "role": "Frontend Lead"
+    },
+    {
+      "name": "Jatin Meena",
+      "email": "23b1519@iitb.ac.in", 
+      "role": "Frontend Developer"
+    },
+    {
+      "name": "Arth Agarwal",
+      "email": "23b1507@iitb.ac.in",
+      "role": "Backend Lead"
+    },
+    {
+      "name": "Aditya Singh",
+      "email": "23b1524@iitb.ac.in",
+      "role": "AI & DevOps Engineer"
+    }
+  ],
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/Nitsinghtomar/DebateSphere/issues"
+  },
+  "homepage": "https://github.com/Nitsinghtomar/DebateSphere#readme",
+  "engines": {
+    "node": ">=16.0.0",
+    "npm": ">=7.0.0"
+  },
+  "devDependencies": {
+    "concurrently": "^8.2.0",
+    "prettier": "^2.8.8",
+    "rimraf": "^5.0.1"
+  },
+  "dependencies": {
+    "cross-env": "^7.0.3"
+  },
+  "config": {
+    "mongoUrl": "mongodb://localhost:27017/debatesphere",
+    "frontendPort": 3000,
+    "backendPort": 5000,
+    "aiServicePort": 5001
+  },
+  "project": {
+    "name": "DebateSphere",
+    "course": "ET 617 - Educational Technology",
+    "institution": "Indian Institute of Technology Bombay",
+    "semester": "Autumn 2025",
+    "client": "Centre for Educational Technology, IITB",
+    "status": "In Development",
+    "currentWeek": 5,
+    "totalWeeks": 11
+  }
+}

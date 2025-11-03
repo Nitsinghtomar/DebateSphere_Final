@@ -1,0 +1,106 @@
+.App {
+  text-align: center;
+}
+
+.App-header {
+  background-color: #282c34;
+  padding: 20px;
+  color: white;
+}
+
+.App-main {
+  padding: 20px;
+}
+
+/* Debate Arena Styles */
+.debate-arena {
+  display: flex;
+  height: 100vh;
+}
+
+.debate-pane {
+  flex: 1;
+  padding: 20px;
+  border-right: 1px solid #e2e8f0;
+}
+
+.debate-pane:last-child {
+  border-right: none;
+}
+
+/* Message Styles */
+.message-list {
+  height: 400px;
+  overflow-y: auto;
+  border: 1px solid #e2e8f0;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.message {
+  padding: 8px 12px;
+  margin: 5px 0;
+  border-radius: 8px;
+  background-color: #f7fafc;
+}
+
+.message.user {
+  background-color: #e6fffa;
+  margin-left: 20px;
+}
+
+.message.opponent {
+  background-color: #fef5e7;
+  margin-right: 20px;
+}
+
+/* AI Feedback Styles */
+.ai-feedback {
+  background-color: #f0fff4;
+  border-left: 4px solid #38a169;
+  padding: 10px;
+  margin: 10px 0;
+  border-radius: 4px;
+}
+
+.fallacy-detection {
+  color: #e53e3e;
+  font-weight: bold;
+}
+
+/* Button Styles */
+.btn-primary {
+  background-color: #4299e1;
+  color: white;
+  border: none;
+  padding: 10px 20px;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 16px;
+}
+
+.btn-primary:hover {
+  background-color: #3182ce;
+}
+
+.btn-secondary {
+  background-color: #718096;
+  color: white;
+  border: none;
+  padding: 8px 16px;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+.btn-secondary:hover {
+  background-color: #4a5568;
+}
+
+@keyframes pulse {
+  0%, 100% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.6;
+  }
+}

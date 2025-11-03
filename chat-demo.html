@@ -1,0 +1,512 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DebateSphere - Real-Time Chat Demo</title>
+    <script src="https://cdn.socket.io/4.8.1/socket.io.min.js"></script>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            min-height: 100vh;
+        }
+        .container {
+            background: white;
+            border-radius: 15px;
+            padding: 30px;
+            box-shadow: 0 20px 40px rgba(0,0,0,0.1);
+        }
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding-bottom: 20px;
+            border-bottom: 2px solid #e2e8f0;
+        }
+        .header h1 {
+            color: #2d3748;
+            margin: 0 0 10px 0;
+            font-size: 2.5em;
+        }
+        .header p {
+            color: #718096;
+            margin: 0;
+            font-size: 1.1em;
+        }
+        .status {
+            display: inline-block;
+            padding: 8px 16px;
+            border-radius: 20px;
+            font-weight: bold;
+            margin-top: 10px;
+        }
+        .status.connected {
+            background: #c6f6d5;
+            color: #22543d;
+        }
+        .status.disconnected {
+            background: #fed7d7;
+            color: #742a2a;
+        }
+        .join-form {
+            display: flex;
+            flex-direction: column;
+            max-width: 400px;
+            margin: 0 auto;
+            gap: 15px;
+        }
+        .join-form input, .join-form select, .join-form button {
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 8px;
+            font-size: 16px;
+        }
+        .join-form button {
+            background: #4299e1;
+            color: white;
+            border: none;
+            cursor: pointer;
+            font-weight: bold;
+            transition: background 0.3s;
+        }
+        .join-form button:hover {
+            background: #3182ce;
+        }
+        .join-form button:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+        .chat-container {
+            display: none;
+            grid-template-columns: 300px 1fr;
+            gap: 20px;
+            height: 600px;
+        }
+        .participants {
+            background: #f7fafc;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-y: auto;
+        }
+        .participants h3 {
+            margin: 0 0 15px 0;
+            color: #2d3748;
+        }
+        .participant {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            margin-bottom: 5px;
+            border-radius: 8px;
+            background: white;
+        }
+        .participant .avatar {
+            width: 40px;
+            height: 40px;
+            border-radius: 50%;
+            background: #4299e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+        }
+        .participant .info {
+            flex: 1;
+        }
+        .participant .name {
+            font-weight: bold;
+            color: #2d3748;
+        }
+        .participant .position {
+            font-size: 12px;
+            padding: 2px 8px;
+            border-radius: 12px;
+            color: white;
+        }
+        .position.PRO {
+            background: #48bb78;
+        }
+        .position.CON {
+            background: #f56565;
+        }
+        .chat-area {
+            display: flex;
+            flex-direction: column;
+            background: #f7fafc;
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        .messages {
+            flex: 1;
+            padding: 20px;
+            overflow-y: auto;
+            background: white;
+        }
+        .message {
+            margin-bottom: 15px;
+            display: flex;
+            gap: 10px;
+        }
+        .message .avatar {
+            width: 35px;
+            height: 35px;
+            border-radius: 50%;
+            background: #4299e1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-weight: bold;
+            font-size: 14px;
+        }
+        .message .content {
+            flex: 1;
+        }
+        .message .header {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            margin-bottom: 5px;
+        }
+        .message .username {
+            font-weight: bold;
+            color: #2d3748;
+        }
+        .message .timestamp {
+            font-size: 12px;
+            color: #718096;
+        }
+        .message .text {
+            background: #edf2f7;
+            padding: 10px 15px;
+            border-radius: 15px;
+            border-top-left-radius: 5px;
+        }
+        .message.own .text {
+            background: #bee3f8;
+            border-top-left-radius: 15px;
+            border-top-right-radius: 5px;
+        }
+        .typing-indicator {
+            font-style: italic;
+            color: #718096;
+            font-size: 14px;
+            padding: 10px 0;
+        }
+        .message-input {
+            display: flex;
+            gap: 10px;
+            padding: 20px;
+            background: #edf2f7;
+        }
+        .message-input input {
+            flex: 1;
+            padding: 12px;
+            border: 2px solid #e2e8f0;
+            border-radius: 25px;
+            font-size: 16px;
+            outline: none;
+        }
+        .message-input input:focus {
+            border-color: #4299e1;
+        }
+        .message-input button {
+            padding: 12px 20px;
+            background: #4299e1;
+            color: white;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .message-input button:hover {
+            background: #3182ce;
+        }
+        .message-input button:disabled {
+            background: #a0aec0;
+            cursor: not-allowed;
+        }
+        .empty-state {
+            text-align: center;
+            color: #718096;
+            padding: 40px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎯 DebateSphere</h1>
+            <p>Real-Time Communication Demo</p>
+            <div id="connectionStatus" class="status disconnected">🔴 Connecting...</div>
+        </div>
+
+        <!-- Join Form -->
+        <div id="joinForm" class="join-form">
+            <h2 style="text-align: center; color: #2d3748;">Join the Chat</h2>
+            <input type="text" id="usernameInput" placeholder="Enter your username" required>
+            <select id="positionSelect">
+                <option value="PRO">PRO Side</option>
+                <option value="CON">CON Side</option>
+            </select>
+            <button id="joinButton" disabled>Join Chat Room</button>
+        </div>
+
+        <!-- Chat Interface -->
+        <div id="chatContainer" class="chat-container">
+            <div class="participants">
+                <h3>Participants (<span id="participantCount">0</span>)</h3>
+                <div id="participantsList"></div>
+            </div>
+            
+            <div class="chat-area">
+                <div id="messages" class="messages">
+                    <div class="empty-state">
+                        <p>No messages yet. Start the conversation!</p>
+                    </div>
+                </div>
+                <div id="typingIndicator" class="typing-indicator" style="display: none;"></div>
+                <div class="message-input">
+                    <input type="text" id="messageInput" placeholder="Type your message..." disabled>
+                    <button id="sendButton" disabled>Send</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Global variables
+        let socket;
+        let connected = false;
+        let joined = false;
+        let username = '';
+        let position = 'PRO';
+        let participants = [];
+        let messages = [];
+        let typingUsers = [];
+
+        // DOM elements
+        const connectionStatus = document.getElementById('connectionStatus');
+        const joinForm = document.getElementById('joinForm');
+        const chatContainer = document.getElementById('chatContainer');
+        const usernameInput = document.getElementById('usernameInput');
+        const positionSelect = document.getElementById('positionSelect');
+        const joinButton = document.getElementById('joinButton');
+        const participantsList = document.getElementById('participantsList');
+        const participantCount = document.getElementById('participantCount');
+        const messagesContainer = document.getElementById('messages');
+        const messageInput = document.getElementById('messageInput');
+        const sendButton = document.getElementById('sendButton');
+        const typingIndicator = document.getElementById('typingIndicator');
+
+        // Initialize Socket.IO connection
+        function initializeSocket() {
+            socket = io(`${process.env.REACT_APP_API_URL}`, {
+                transports: ['websocket', 'polling']
+            });
+
+            socket.on('connect', () => {
+                console.log('✅ Connected to server');
+                connected = true;
+                updateConnectionStatus();
+                joinButton.disabled = false;
+            });
+
+            socket.on('disconnect', () => {
+                console.log('❌ Disconnected from server');
+                connected = false;
+                updateConnectionStatus();
+                joinButton.disabled = true;
+            });
+
+            socket.on('debate_message', (messageData) => {
+                console.log('📥 New message received:', messageData);
+                addMessage(messageData);
+            });
+
+            socket.on('participants_update', (updatedParticipants) => {
+                console.log('👥 Participants updated:', updatedParticipants);
+                participants = updatedParticipants;
+                updateParticipantsList();
+            });
+
+            socket.on('user_typing', (data) => {
+                if (data.username !== username) {
+                    if (data.isTyping) {
+                        if (!typingUsers.includes(data.username)) {
+                            typingUsers.push(data.username);
+                        }
+                    } else {
+                        typingUsers = typingUsers.filter(user => user !== data.username);
+                    }
+                    updateTypingIndicator();
+                }
+            });
+        }
+
+        // Update connection status
+        function updateConnectionStatus() {
+            if (connected) {
+                connectionStatus.textContent = '🟢 Connected';
+                connectionStatus.className = 'status connected';
+            } else {
+                connectionStatus.textContent = '🔴 Disconnected';
+                connectionStatus.className = 'status disconnected';
+            }
+        }
+
+        // Join chat room
+        function joinChat() {
+            const usernameValue = usernameInput.value.trim();
+            if (!usernameValue || !connected) return;
+
+            username = usernameValue;
+            position = positionSelect.value;
+
+            socket.emit('join_debate', {
+                debateId: 'demo-chat',
+                username: username,
+                position: position
+            });
+
+            joined = true;
+            joinForm.style.display = 'none';
+            chatContainer.style.display = 'grid';
+            messageInput.disabled = false;
+            sendButton.disabled = false;
+
+            // Focus on message input
+            messageInput.focus();
+        }
+
+        // Send message
+        function sendMessage() {
+            const messageText = messageInput.value.trim();
+            if (!messageText || !joined) return;
+
+            const messageData = {
+                username: username,
+                content: messageText,
+                position: position,
+                timestamp: new Date().toISOString()
+            };
+
+            socket.emit('send_message', {
+                debateId: 'demo-chat',
+                message: messageData
+            });
+
+            messageInput.value = '';
+            updateTyping(false);
+        }
+
+        // Add message to chat
+        function addMessage(messageData) {
+            // Remove empty state if it exists
+            const emptyState = messagesContainer.querySelector('.empty-state');
+            if (emptyState) {
+                emptyState.remove();
+            }
+
+            const messageElement = document.createElement('div');
+            messageElement.className = `message ${messageData.username === username ? 'own' : ''}`;
+
+            const timestamp = new Date(messageData.timestamp).toLocaleTimeString();
+            const initials = messageData.username.substring(0, 2).toUpperCase();
+
+            messageElement.innerHTML = `
+                <div class="avatar">${initials}</div>
+                <div class="content">
+                    <div class="header">
+                        <span class="username">${messageData.username}</span>
+                        <span class="position ${messageData.position}">${messageData.position}</span>
+                        <span class="timestamp">${timestamp}</span>
+                    </div>
+                    <div class="text">${messageData.content}</div>
+                </div>
+            `;
+
+            messagesContainer.appendChild(messageElement);
+            messagesContainer.scrollTop = messagesContainer.scrollHeight;
+        }
+
+        // Update participants list
+        function updateParticipantsList() {
+            participantCount.textContent = participants.length;
+            participantsList.innerHTML = '';
+
+            participants.forEach(participant => {
+                const participantElement = document.createElement('div');
+                participantElement.className = 'participant';
+                
+                const initials = participant.username.substring(0, 2).toUpperCase();
+                
+                participantElement.innerHTML = `
+                    <div class="avatar">${initials}</div>
+                    <div class="info">
+                        <div class="name">${participant.username}</div>
+                        <div class="position ${participant.position}">${participant.position}</div>
+                    </div>
+                `;
+
+                participantsList.appendChild(participantElement);
+            });
+        }
+
+        // Update typing indicator
+        function updateTypingIndicator() {
+            if (typingUsers.length > 0) {
+                const typingText = typingUsers.length === 1 
+                    ? `${typingUsers[0]} is typing...`
+                    : `${typingUsers.join(', ')} are typing...`;
+                typingIndicator.textContent = typingText;
+                typingIndicator.style.display = 'block';
+            } else {
+                typingIndicator.style.display = 'none';
+            }
+        }
+
+        // Handle typing events
+        function updateTyping(isTyping) {
+            if (joined) {
+                socket.emit('typing', {
+                    debateId: 'demo-chat',
+                    isTyping: isTyping
+                });
+            }
+        }
+
+        // Event listeners
+        joinButton.addEventListener('click', joinChat);
+        sendButton.addEventListener('click', sendMessage);
+
+        usernameInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                joinChat();
+            }
+        });
+
+        messageInput.addEventListener('keypress', (e) => {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+
+        messageInput.addEventListener('input', () => {
+            updateTyping(messageInput.value.trim().length > 0);
+        });
+
+        messageInput.addEventListener('blur', () => {
+            updateTyping(false);
+        });
+
+        // Initialize the application
+        initializeSocket();
+    </script>
+</body>
+</html>

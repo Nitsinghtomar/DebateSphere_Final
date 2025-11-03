@@ -1,0 +1,43 @@
+.
+├── analyze.js
+├── create-demo-users.js
+├── create-test-data.js
+├── directory_structure_backend.txt
+├── middleware
+│   └── auth.js
+├── models
+│   ├── AIFeedback.js
+│   ├── Analysis.js
+│   ├── Argument.js
+│   ├── Debate.js
+│   ├── Debate_old.js
+│   └── User.js
+├── package.json
+├── package-lock.json
+├── routes
+│   ├── analysis.js
+│   ├── auth.js
+│   ├── debateAI.js
+│   ├── debates.js
+│   ├── health.js
+│   └── whisper.js
+├── server.js
+├── services
+│   ├── geminiAnalysisService.js
+│   ├── geminiService.js
+│   └── whisperService.js
+├── socket
+│   ├── SimpleSocketManager.js
+│   └── SocketManager.js
+├── test-chat-tokens.js
+├── test-gemini.js
+├── test-hf.js
+├── test-whisper.js
+└── uploads
+    └── temp
+        ├── 550a19c6092764e185063d9a27420ca7
+        ├── 9b1ae7037ac717e5871f19bae986412c
+        ├── 9d0867497ab99f166b33ef31777556df
+        └── d56e1fdb22fc1ff4f25660311da0149b
+
+7 directories, 33 files
