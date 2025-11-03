@@ -94,4 +94,3 @@ app.socketManager = socketManager;
 
 console.log('🔌 Socket.IO initialized');
 
-module.exports = { app, server, io, socketManager };
