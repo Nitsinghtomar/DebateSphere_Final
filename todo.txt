@@ -128,7 +128,8 @@ Phase 5: Polish
     Testing and bug fixes
     
 
-https://huggingface.co/onnx-community/Kokoro-82M-v1.0-ONNX 
+🔍 Reference Model
 
-  debatesphere_user: {"id":"1761660321191","username":"LAVDA LASSASN","email":"lkajsdf@gmail.com"}
-
+Hugging Face ONNX Model:
+Kokoro-82M-v1.0-ONNX
+ — can assist with on-device inference for speech or sentiment metrics.
