@@ -133,3 +133,12 @@ Phase 5: Polish
 Hugging Face ONNX Model:
 Kokoro-82M-v1.0-ONNX
  — can assist with on-device inference for speech or sentiment metrics.
+👤 SAMPLE USER RECORD
+------------------------------------------------------------
+{
+  "id": "1761660321191",
+  "username": "RAHUL KUMAR",
+  "email": "lkajsdf@gmail.com",
+  "role": "debater",
+  "joinedAt": "2025-11-04T17:00:00Z"
+}
