@@ -8,7 +8,7 @@ load_dotenv()
 
 app = Flask(__name__)
 CORS(app)
-
+#arth was here
 # Placeholder for AI model (will be implemented in Week 6)
 # from transformers import pipeline
 # 
