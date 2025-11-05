@@ -67,7 +67,7 @@ class SimpleSocketManager {
       // Handle sending messages
       socket.on('send_message', (data) => {
         const { debateId, message } = data;
-        console.log(`💬 Message in ${debateId}:`, message);
+        console.log(`Message in ${debateId}:`, message);
 
         if (this.activeDebates.has(debateId)) {
           const debate = this.activeDebates.get(debateId);
